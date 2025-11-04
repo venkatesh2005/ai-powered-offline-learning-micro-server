@@ -1,0 +1,19 @@
+================================================================================
+INDEXING DEBUG LOG - 2025-11-04 15:20:25.541677
+================================================================================
+
+📋 Found 1 unindexed PDFs
+
+--- PROCESSING PDF 1/1 ---
+📄 File: sreeja_pdf.pdf
+📍 Path: C:\Users\HP X360\Downloads\Final-Year-Project\backend\resources\uploads\sreeja_pdf.pdf
+📊 Exists: True
+📝 Raw text length: 0 characters
+📝 First 200 chars: ''
+📦 Generated 0 chunks
+✅ Successfully processed sreeja_pdf.pdf
+
+--- INDEXING SUMMARY ---
+📊 Total chunks: 0
+📊 Total metadata entries: 0
+❌ No content extracted from PDFs

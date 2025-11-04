@@ -1,0 +1,63 @@
+====================================================================
+🚀 PUSH TO GITHUB - READY TO GO!
+====================================================================
+
+Your Details:
+-------------
+Name: Venkatesh
+Email: venkat42005@gmail.com
+GitHub: venkatesh2005
+Repository: ai-powered-offline-learning-micro-server
+
+
+STEP 1: CREATE GITHUB REPOSITORY
+---------------------------------
+1. Go to: https://github.com/new
+2. Repository name: ai-powered-offline-learning-micro-server
+3. Description: AI-powered offline learning platform with micro server architecture
+4. Choose Public or Private
+5. DO NOT check any boxes (no README, .gitignore, license)
+6. Click "Create repository"
+
+
+STEP 2: RUN THE SCRIPT
+-----------------------
+Simply right-click on "push_to_github.ps1" and select "Run with PowerShell"
+
+OR run this command:
+cd "C:\Users\HP X360\Downloads\Final-Year-Project"
+.\push_to_github.ps1
+
+
+STEP 3: ENTER CREDENTIALS
+--------------------------
+When prompted:
+- Username: venkatesh2005
+- Password: Personal Access Token (get from https://github.com/settings/tokens)
+
+Get token:
+1. Go to https://github.com/settings/tokens
+2. Click "Generate new token (classic)"
+3. Note: "Push AI Learning Server"
+4. Select scope: ✅ repo
+5. Generate and COPY the token
+6. Use as password when pushing
+
+
+YOUR REPOSITORY WILL BE AT:
+----------------------------
+https://github.com/venkatesh2005/ai-powered-offline-learning-micro-server
+
+
+WHAT'S BEING UPLOADED:
+----------------------
+✅ TinyLlama model (650MB) - Active model
+✅ All source code (backend + frontend)
+✅ All documentation
+✅ Setup guides
+
+❌ node_modules (excluded)
+❌ mistral & orca models (excluded)
+❌ cache files (excluded)
+
+====================================================================

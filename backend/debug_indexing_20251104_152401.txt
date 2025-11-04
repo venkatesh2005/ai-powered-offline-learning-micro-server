@@ -1,0 +1,71 @@
+================================================================================
+INDEXING DEBUG LOG - 2025-11-04 15:24:01.716859
+================================================================================
+
+🔄 FORCE REINDEX: Processing ALL PDFs
+
+--- PROCESSING PDF 1/3 ---
+📄 File: Campus_Connect_Agile.pdf
+📍 Path: C:\Users\HP X360\Downloads\Final-Year-Project\backend\resources\uploads\Campus_Connect_Agile.pdf
+📊 Exists: True
+📝 Raw text length: 3864 characters
+📝 First 200 chars: 'Campus Connect: Product Backlog Creation and Prioritization in Agile Team Name: Agile Innovators Group Size: 4 Members Tool Used: Trello 1. Requirement Gathering Product Overview Campus Connect is a w'
+📊 Readability score: 0.631 (366/580 words)
+📦 Generated 2 chunks
+
+  CHUNK 1:
+  📏 Length: 3444 characters
+  📝 Preview: 'Campus Connect: Product Backlog Creation and Prioritization in Agile Team Name: Agile Innovators Group Size: 4 Members Tool Used: Trello 1. Requiremen'
+  📊 Chunk readability: 0.627
+  ✅ Good quality chunk
+
+  CHUNK 2:
+  📏 Length: 697 characters
+  📝 Preview: 'UI To Do T2 PBI-12 Implement authentication logic In Progress T3 PBI-1 Create schedule UI & backend API To Do T4 PBI-2 Upload/download feature To Do T'
+  📊 Chunk readability: 0.653
+  ✅ Good quality chunk
+✅ Successfully processed Campus_Connect_Agile.pdf
+
+--- PROCESSING PDF 2/3 ---
+📄 File: sreeja_pdf.pdf
+📍 Path: C:\Users\HP X360\Downloads\Final-Year-Project\backend\resources\uploads\sreeja_pdf.pdf
+📊 Exists: True
+📝 Raw text length: 0 characters
+📝 First 200 chars: ''
+📦 Generated 0 chunks
+✅ Successfully processed sreeja_pdf.pdf
+
+--- PROCESSING PDF 3/3 ---
+📄 File: Flutter_Part1_Full_Word.pdf
+📍 Path: C:\Users\HP X360\Downloads\Final-Year-Project\backend\resources\uploads\Flutter_Part1_Full_Word.pdf
+📊 Exists: True
+📝 Raw text length: 4280 characters
+📝 First 200 chars: 'Flutter Full Course – Part 1: Flutter Basics & Dart Fundamentals Author: Shaikha Fathima K.P Platform: Android Studio Table of Contents Chapter 1 – Introduction to Flutter What is Flutter? Why Flutter'
+📊 Readability score: 0.515 (352/684 words)
+📦 Generated 2 chunks
+
+  CHUNK 1:
+  📏 Length: 3165 characters
+  📝 Preview: 'Flutter Full Course – Part 1: Flutter Basics & Dart Fundamentals Author: Shaikha Fathima K.P Platform: Android Studio Table of Contents Chapter 1 – In'
+  📊 Chunk readability: 0.549
+  ✅ Good quality chunk
+
+  CHUNK 2:
+  📏 Length: 1335 characters
+  📝 Preview: 'Variables store data; datatype defines value type. 2.2 Operators int a = 10, b = 5; int sum = a + b; int diff = a - b; int mul = a * b; double div = a'
+  📊 Chunk readability: 0.414
+  ✅ Good quality chunk
+✅ Successfully processed Flutter_Part1_Full_Word.pdf
+
+--- INDEXING SUMMARY ---
+📊 Total chunks: 4
+📊 Total metadata entries: 4
+🔨 Building/updating FAISS index...
+✅ Built new index from scratch
+
+--- FINAL INDEX STATS ---
+📊 Total documents in index: 4
+📊 Index loaded: True
+📊 Model loaded: True
+
+✅ INDEXING COMPLETED SUCCESSFULLY!

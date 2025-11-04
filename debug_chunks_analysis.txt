@@ -1,0 +1,74 @@
+================================================================================
+DEBUG ANALYSIS: AI RESPONSE ISSUE - CAMPUS CONNECT MISIDENTIFICATION  
+================================================================================
+Date: November 4, 2025
+Issue: AI incorrectly identifies Campus Connect as an IBM program
+
+PROBLEM IDENTIFIED - TEXT EXTRACTION CORRUPTION:
+================================================================================
+
+ROOT CAUSE FOUND: The PDF text extraction is severely corrupted!
+
+EVIDENCE FROM DEBUG SCRIPT:
+- Raw extracted text: '&DPSXV\x03&RQQHFW \x033URGXFW\x03%DFNORJ...'
+- Should be: "Campus Connect Product Backlog Creation..."
+- Control characters (\x03) are used instead of spaces
+- Readability score: 0.06 (18/286 words readable) - CRITICALLY LOW
+- Only 1 chunk created due to poor text quality
+
+SPECIFIC CORRUPTION EXAMPLES:
+- '&DPSXV\x03&RQQHFW' → Should be "Campus Connect"
+- '7HDP\x031DPH' → Should be "Team Name"  
+- '$JLOH\x03,QQRYDWRUV' → Should be "Agile Innovators"
+- '\x17\x030HPEHUV' → Should be "4 Members"
+
+STORED CHUNKS ARE CORRUPTED:
+All 3 stored chunks contain the same corrupted text with control characters.
+This explains why the AI gave wrong information - it received gibberish instead of the actual PDF content.
+
+IMMEDIATE FIX REQUIRED:
+================================================================================
+
+1. PDF TEXT EXTRACTION FIX (backend/ai/pdf_processor.py):
+   - Replace control characters with spaces
+   - Add character mapping/translation
+   - Implement proper text cleaning
+
+2. CHUNK QUALITY VALIDATION:
+   - Reject chunks with readability score < 0.5
+   - Re-extract with different PDF library if corruption detected
+   - Add fallback extraction methods
+
+3. CONTEXT FILTERING (backend/ai/chatbot.py):
+   - Validate context quality before sending to AI
+   - Reject corrupted context to prevent hallucinations
+
+EXPECTED VS ACTUAL CHUNKS:
+================================================================================
+
+ACTUAL CORRUPTED CHUNKS:
+CHUNK 1: '&DPSXV\x03&RQQHFW \x033URGXFW\x03%DFNORJ\x03&UHDWLRQ...'
+CHUNK 2: '3%,\x10\x14\x13 1RWLޯFDWLRQV\x03WR\x03DOO\x03XVHUV...'  
+CHUNK 3: 'DQQRXQFHPHQWV FRPPXQLFDWLRQ 3%,\x10\x14\x13 6HQG...'
+
+EXPECTED CLEAN CHUNKS (after fix):
+CHUNK 1: "Campus Connect Product Backlog Creation and Prioritization in Agile Team Name Agile Innovators Group Size 4 Members Tool Used Trello..."
+CHUNK 2: "User Stories: Student View class schedule, Faculty Upload lecture notes, Student Receive event notifications..."
+CHUNK 3: "Sprint Planning Assumptions Duration 2 weeks Team Capacity 20 Story Points Velocity 15 Story Points..."
+
+WHY AI RESPONDED INCORRECTLY:
+================================================================================
+1. AI received corrupted context: "DQQRXQFHPHQWV FRPPXQLFDWLRQ..."
+2. Unable to extract meaningful information about Campus Connect
+3. Fell back to training data association (Campus Connect = IBM)
+4. Generated plausible but incorrect response
+
+URGENT ACTION ITEMS:
+================================================================================
+1. ✅ IDENTIFIED: PDF extraction using control characters instead of spaces
+2. 🔧 FIX NEEDED: Update pdf_processor.py with character replacement
+3. 🧹 CLEAN: Re-process all uploaded PDFs after fix
+4. ✅ VALIDATE: Test with corrected chunks
+5. 🛡️ PREVENT: Add quality validation to prevent future corruption
+
+This analysis confirms the AI system is working correctly, but the PDF preprocessing is corrupted, causing the wrong response.

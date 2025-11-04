@@ -1,0 +1,35 @@
+================================================================================
+INDEXING DEBUG LOG - 2025-11-04 17:16:19.375868
+================================================================================
+
+🔄 FORCE REINDEX: Processing ALL PDFs
+
+--- PROCESSING PDF 1/1 ---
+📄 File: Document_1.pdf
+📍 Path: C:\Users\HP X360\Downloads\Final-Year-Project\backend\resources\uploads\Document_1.pdf
+📊 Exists: True
+📝 Raw text length: 674 characters
+📝 First 200 chars: "FLUTTER\n1. Variables & Data Types\n1. Declare variables of all basic data types in Dart (int, double, String, bool, var,\ndynamic) and print their values.\nvoid main()\n{\nint n = 10;\nString name = 'Shaikh"
+📊 Readability score: 0.504 (59/117 words)
+📦 Generated 1 chunks
+
+  CHUNK 1:
+  📏 Length: 674 characters
+  📝 Full Content:
+FLUTTER 1. Variables & Data Types 1. Declare variables of all basic data types in Dart (int, double, String, bool, var, dynamic) and print their values. void main() { int n = 10; String name = 'Shaikha'; double h = 5.6; bool isStudent = true; dynamic value = 100; print('$n'); print('$name'); print('$h'); print('$isStudent'); print('$value'); } 2. Write a Dart program to swap two numbers without using a third variable. void main() { int a = 10; int b = 20; a=a+b; b=a-b; a=a-b; print('$a,$b'); } 3. Write a program that converts temperature from Celsius to Fahrenheit. 4. Take a user’s name and age as input and print a greeting like: Hello Shaikha! You are 21 years old.
+  📊 Chunk readability: 0.504
+  ✅ Good quality chunk
+✅ Successfully processed Document_1.pdf
+
+--- INDEXING SUMMARY ---
+📊 Total chunks: 1
+📊 Total metadata entries: 1
+🔨 Building/updating FAISS index...
+✅ Built new index from scratch
+
+--- FINAL INDEX STATS ---
+📊 Total documents in index: 1
+📊 Index loaded: True
+📊 Model loaded: True
+
+✅ INDEXING COMPLETED SUCCESSFULLY!

@@ -1,0 +1,71 @@
+# 🚀 EXECUTE THESE COMMANDS TO PUSH TO GITHUB
+# ============================================
+
+# STEP 1: Configure Git (REPLACE WITH YOUR INFO!)
+# ------------------------------------------------
+git config --global user.name "Your Name"
+git config --global user.email "your.email@example.com"
+
+# Example:
+# git config --global user.name "John Doe"
+# git config --global user.email "johndoe@gmail.com"
+
+
+# STEP 2: Navigate to Project Directory
+# --------------------------------------
+cd "C:\Users\HP X360\Downloads\Final-Year-Project"
+
+
+# STEP 3: Commit the Changes
+# ---------------------------
+git commit -m "Initial commit: Campus Connect AI Learning Platform with TinyLlama model"
+
+
+# STEP 4: Create Repository on GitHub
+# ------------------------------------
+# 1. Go to: https://github.com/new
+# 2. Repository name: campus-connect (or your choice)
+# 3. Description: AI-powered learning platform with offline chatbot
+# 4. Keep it PUBLIC or PRIVATE (your choice)
+# 5. DO NOT initialize with README, .gitignore, or license
+# 6. Click "Create repository"
+# 7. Copy the repository URL shown (looks like: https://github.com/USERNAME/REPO.git)
+
+
+# STEP 5: Add Remote Repository (REPLACE WITH YOUR REPO URL!)
+# ------------------------------------------------------------
+git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git
+
+# Example:
+# git remote add origin https://github.com/johndoe/campus-connect.git
+
+
+# STEP 6: Verify Remote
+# ----------------------
+git remote -v
+
+
+# STEP 7: Rename Branch to 'main' and Push
+# -----------------------------------------
+git branch -M main
+git push -u origin main
+
+
+# When prompted for credentials:
+# - Username: Your GitHub username
+# - Password: Use Personal Access Token (NOT your GitHub password)
+#   Create token at: https://github.com/settings/tokens
+#   Select scope: "repo" (full control of private repositories)
+
+
+# ============================================
+# ✅ VERIFICATION CHECKLIST
+# ============================================
+# After pushing, verify on GitHub:
+# - [ ] All source code files are visible
+# - [ ] TinyLlama model (650MB) is uploaded
+# - [ ] README.md and guides are visible
+# - [ ] node_modules/ is NOT in the repo
+# - [ ] mistral and orca-mini models are NOT in the repo
+# - [ ] .env file is NOT in the repo
+# - [ ] __pycache__/ folders are NOT in the repo
