@@ -1,10 +1,10 @@
 import os
 import pickle
+import time
 import numpy as np
 from typing import List, Tuple
 import faiss
 from cachetools import LRUCache
-from functools import lru_cache
 
 class EmbeddingsManager:
     """Optimized document embeddings manager using FAISS with caching"""
@@ -23,42 +23,45 @@ class EmbeddingsManager:
         self._model_loaded = False
         
     def load_model(self):
-        """Load the sentence transformer model (once)"""
+        """Load the sentence transformer model (once)."""
         if self._model_loaded:
-            return  # Already loaded
-            
+            return
+
         if self.model is None:
-            print(f"📥 Loading embeddings model: {self.model_name}...")
+            print(f"\n📥 [Embeddings] Loading SentenceTransformer: {self.model_name}...")
+            t0 = time.perf_counter()
             try:
                 from sentence_transformers import SentenceTransformer
                 self.model = SentenceTransformer(self.model_name)
                 self._model_loaded = True
-                print("✅ Embeddings model loaded!")
+                print(f"✅ [Embeddings] Model loaded in {time.perf_counter()-t0:.2f}s")
             except Exception as e:
-                print(f"❌ Failed to load embeddings model: {e}")
+                print(f"❌ [Embeddings] Failed to load model: {e}")
                 self.model = None
                 self._model_loaded = False
     
     def create_embeddings(self, texts: List[str], show_progress: bool = False) -> np.ndarray:
-        """Create embeddings with optional progress bar"""
+        """Create embeddings in batches with timing."""
         self.load_model()
         if self.model is None:
             return np.zeros((len(texts), 384), dtype=np.float32)
-        
-        # Batch processing for efficiency
+
         batch_size = 32
         embeddings_list = []
-        
+        t0 = time.perf_counter()
+
         for i in range(0, len(texts), batch_size):
             batch = texts[i:i + batch_size]
             batch_embeddings = self.model.encode(
-                batch, 
-                show_progress_bar=show_progress and i == 0,  # Show once
+                batch,
+                show_progress_bar=False,
                 convert_to_numpy=True,
-                normalize_embeddings=True  # Normalize for better similarity
+                normalize_embeddings=True
             )
             embeddings_list.append(batch_embeddings)
-        
+
+        elapsed = time.perf_counter() - t0
+        print(f"⏱️  [Embeddings] Encoded {len(texts)} chunks in {elapsed:.3f}s")
         return np.vstack(embeddings_list) if embeddings_list else np.array([])
     
     def build_index(self, texts: List[str], metadata: List[dict]):
@@ -94,36 +97,37 @@ class EmbeddingsManager:
             pickle.dump(self.metadata, f, protocol=pickle.HIGHEST_PROTOCOL)
     
     def load_index(self):
-        """Load FAISS index and metadata"""
+        """Load FAISS index and metadata with timing."""
         if os.path.exists(self.index_path) and os.path.exists(self.metadata_path):
+            t0 = time.perf_counter()
             self.index = faiss.read_index(self.index_path)
-            
             with open(self.metadata_path, 'rb') as f:
                 self.metadata = pickle.load(f)
-            
-            print(f"✅ Loaded index with {len(self.metadata)} documents!")
+            elapsed = time.perf_counter() - t0
+            print(f"✅ [FAISS] Index loaded in {elapsed:.2f}s ({len(self.metadata)} documents)")
             return True
         return False
     
     def search(self, query: str, top_k: int = 5) -> List[Tuple[str, dict, float]]:
-        """Optimized search with caching"""
-        # Check cache first
+        """FAISS cosine-similarity search with per-stage timing logs."""
+        # ── Cache check ────────────────────────────────────────────
         cache_key = f"{query}:{top_k}"
         if cache_key in self._query_cache:
+            print(f"   ⚡ [FAISS] Cache hit for query ({len(query)} chars)")
             return self._query_cache[cache_key]
-        
+
         self.load_model()
-        
-        # If model failed to load, return empty results
+
         if self.model is None:
-            print("⚠️  Embeddings model not available, returning empty results")
+            print("⚠️  [FAISS] Embeddings model not available, returning empty results")
             return []
-        
+
         if self.index is None:
             if not self.load_index():
                 return []
-        
-        # Create query embedding
+
+        # ── Encode query ────────────────────────────────────────────
+        t_encode = time.perf_counter()
         try:
             query_embedding = self.model.encode(
                 [query],
@@ -131,25 +135,39 @@ class EmbeddingsManager:
                 normalize_embeddings=True
             )
         except Exception as e:
-            print(f"❌ Error encoding query: {e}")
+            print(f"❌ [FAISS] Error encoding query: {e}")
             return []
-        
-        # Search (using cosine similarity via inner product)
-        scores, indices = self.index.search(query_embedding.astype('float32'), min(top_k, len(self.metadata)))
-        
-        # Return results
+        encode_time = time.perf_counter() - t_encode
+
+        # ── FAISS search ────────────────────────────────────────────
+        t_faiss = time.perf_counter()
+        scores, indices = self.index.search(
+            query_embedding.astype('float32'),
+            min(top_k, len(self.metadata))
+        )
+        faiss_time = time.perf_counter() - t_faiss
+
+        print(f"⏱️  [FAISS] Encode: {encode_time*1000:.1f}ms | Search: {faiss_time*1000:.1f}ms "
+              f"| Total: {(encode_time+faiss_time)*1000:.1f}ms")
+
+        # ── Build results (guard idx == -1 for FAISS unfilled slots) ───────
         results = []
         for i, idx in enumerate(indices[0]):
-            if idx < len(self.metadata) and idx >= 0:
+            if idx == -1:
+                continue   # FAISS returns -1 when fewer results than top_k
+            if 0 <= idx < len(self.metadata):
+                score = float(scores[0][i])
                 results.append((
                     self.metadata[idx]['text'],
                     self.metadata[idx],
-                    float(scores[0][i])
+                    score
                 ))
-        
-        # Cache results
+                print(f"   📊 [FAISS] Result {i+1}: score={score:.4f} | "
+                      f"chunk_id={self.metadata[idx].get('chunk_id', '?')} | "
+                      f"{len(self.metadata[idx]['text'].split())} words")
+
+        results.sort(key=lambda x: x[2], reverse=True)
         self._query_cache[cache_key] = results
-        
         return results
     
     def add_documents(self, texts: List[str], metadata: List[dict]):
@@ -196,6 +214,15 @@ class EmbeddingsManager:
         
         print("🧹 Cleared existing index and metadata")
     
+    def clear_query_cache(self) -> int:
+        """Clear only the LRU query cache — leaves FAISS index intact.
+        Returns the number of entries removed.
+        """
+        count = len(self._query_cache)
+        self._query_cache.clear()
+        print(f"🧹 [FAISS] LRU query cache cleared ({count} entries removed).")
+        return count
+
     def get_stats(self) -> dict:
         """Get index statistics"""
         return {

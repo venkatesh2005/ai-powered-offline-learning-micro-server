@@ -74,7 +74,10 @@ export default function Resources() {
 
   const handleDownload = (resource, e) => {
     e.stopPropagation()
-    window.open(`http://localhost:5000/api/resources/${resource.id}/download`, '_blank')
+    // Use the same origin the page was loaded from — works for localhost AND
+    // any LAN IP (e.g. http://192.168.1.x:3000) without any hardcoding.
+    const apiURL = axios.defaults.baseURL || window.location.origin
+    window.open(`${apiURL}/api/resources/${resource.id}/download`, '_blank')
   }
 
   const handleDelete = async (resource, e) => {
@@ -96,38 +99,38 @@ export default function Resources() {
   const categories = ['All', 'PDF', 'Video', 'Document', 'Presentation']
 
   return (
-    <div className="min-h-screen p-6">
+    <div className="min-h-screen p-3 md:p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
+          className="mb-6 md:mb-8"
         >
-          <h1 className="text-4xl font-bold mb-2 text-slate-800">Learning Resources</h1>
-          <p className="text-slate-600">Browse and search through your learning materials</p>
+          <h1 className="text-2xl md:text-4xl font-bold mb-2 text-slate-800">Learning Resources</h1>
+          <p className="text-sm md:text-base text-slate-600">Browse and search through your learning materials</p>
         </motion.div>
 
         {/* Search and Filter */}
-        <div className="card p-6 mb-8">
-          <div className="flex flex-col md:flex-row gap-4">
+        <div className="card p-4 md:p-6 mb-6 md:mb-8">
+          <div className="flex flex-col gap-3 md:gap-4">
             <div className="flex-1 relative">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
+              <Search className="absolute left-3 md:left-4 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4 md:w-5 md:h-5" />
               <input
                 type="text"
                 placeholder="Search resources..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="input pl-12"
+                className="input pl-10 md:pl-12 text-sm md:text-base"
               />
             </div>
             
-            <div className="flex gap-2">
+            <div className="flex gap-2 overflow-x-auto pb-2 md:pb-0">
               {categories.map((cat) => (
                 <button
                   key={cat}
                   onClick={() => setCategory(cat === 'All' ? '' : cat.toLowerCase())}
-                  className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                  className={`px-3 py-2 md:px-4 rounded-lg font-medium transition-all text-sm whitespace-nowrap ${
                     (cat === 'All' && !category) || category === cat.toLowerCase()
                       ? 'bg-primary-600 text-white'
                       : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
@@ -146,10 +149,10 @@ export default function Resources() {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={() => setShowUploadModal(true)}
-            className="btn-primary mb-8 flex items-center space-x-2"
+            className="btn-primary mb-6 md:mb-8 flex items-center justify-center space-x-2 w-full md:w-auto"
           >
-            <Upload className="w-5 h-5" />
-            <span>Upload New Resource</span>
+            <Upload className="w-4 h-4 md:w-5 md:h-5" />
+            <span className="text-sm md:text-base">Upload New Resource</span>
           </motion.button>
         )}
 
@@ -160,7 +163,7 @@ export default function Resources() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-3 md:p-4"
               onClick={() => !uploading && setShowUploadModal(false)}
             >
               <motion.div
@@ -168,10 +171,10 @@ export default function Resources() {
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.9, opacity: 0 }}
                 onClick={(e) => e.stopPropagation()}
-                className="card p-8 max-w-md w-full"
+                className="card p-6 md:p-8 max-w-md w-full max-h-[90vh] overflow-y-auto"
               >
-                <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-2xl font-bold text-slate-800">Upload Resource</h2>
+                <div className="flex justify-between items-center mb-4 md:mb-6">
+                  <h2 className="text-xl md:text-2xl font-bold text-slate-800">Upload Resource</h2>
                   <button
                     onClick={() => !uploading && setShowUploadModal(false)}
                     className="text-slate-400 hover:text-slate-600"
@@ -251,10 +254,10 @@ export default function Resources() {
         {/* Resources Grid */}
         {loading ? (
           <div className="flex justify-center items-center h-64">
-            <div className="loading-spinner w-12 h-12"></div>
+            <div className="loading-spinner w-10 h-10 md:w-12 md:h-12"></div>
           </div>
         ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             {resources.map((resource, idx) => (
               <motion.div
                 key={resource.id}
@@ -263,24 +266,24 @@ export default function Resources() {
                 transition={{ delay: idx * 0.05 }}
                 whileHover={{ y: -5 }}
                 onClick={() => handleResourceClick(resource)}
-                className="card p-6 cursor-pointer group"
+                className="card p-4 md:p-6 cursor-pointer group"
               >
-                <div className="flex items-start justify-between mb-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <FileText className="w-6 h-6 text-white" />
+                <div className="flex items-start justify-between mb-3 md:mb-4">
+                  <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <FileText className="w-5 h-5 md:w-6 md:h-6 text-white" />
                   </div>
-                  <span className="px-3 py-1 bg-primary-100 text-primary-700 rounded-full text-xs font-semibold">
+                  <span className="px-2 md:px-3 py-1 bg-primary-100 text-primary-700 rounded-full text-xs font-semibold">
                     {resource.category}
                   </span>
                 </div>
                 
-                <h3 className="font-bold text-lg mb-2 text-slate-800 group-hover:text-primary-600 transition-colors">
+                <h3 className="font-bold text-base md:text-lg mb-2 text-slate-800 group-hover:text-primary-600 transition-colors line-clamp-2">
                   {resource.title}
                 </h3>
-                <p className="text-sm text-slate-600 mb-4">{resource.description}</p>
+                <p className="text-xs md:text-sm text-slate-600 mb-3 md:mb-4 line-clamp-2">{resource.description}</p>
                 
-                <div className="flex items-center justify-between text-sm text-slate-500">
-                  <span>{resource.uploaded_at}</span>
+                <div className="flex items-center justify-between text-xs md:text-sm text-slate-500">
+                  <span className="truncate">{resource.uploaded_at}</span>
                   <div className="flex items-center space-x-2">
                     <Eye className="w-4 h-4" />
                     <button
@@ -313,7 +316,7 @@ export default function Resources() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+              className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-3 md:p-4"
               onClick={() => setShowViewerModal(false)}
             >
               <motion.div
@@ -323,18 +326,18 @@ export default function Resources() {
                 onClick={(e) => e.stopPropagation()}
                 className="bg-white rounded-2xl w-full max-w-6xl h-[90vh] flex flex-col"
               >
-                <div className="flex justify-between items-center p-6 border-b border-slate-200">
-                  <div>
-                    <h2 className="text-2xl font-bold text-slate-800">{selectedResource.title}</h2>
-                    <p className="text-sm text-slate-600">{selectedResource.description}</p>
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center p-4 md:p-6 border-b border-slate-200 gap-3">
+                  <div className="min-w-0 flex-1">
+                    <h2 className="text-lg md:text-2xl font-bold text-slate-800 truncate">{selectedResource.title}</h2>
+                    <p className="text-xs md:text-sm text-slate-600 truncate">{selectedResource.description}</p>
                   </div>
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-2 flex-shrink-0">
                     <button
                       onClick={(e) => handleDownload(selectedResource, e)}
-                      className="btn-secondary flex items-center space-x-2"
+                      className="btn-secondary flex items-center space-x-2 text-sm"
                     >
-                      <Download className="w-4 h-4" />
-                      <span>Download</span>
+                      <Download className="w-3 h-3 md:w-4 md:h-4" />
+                      <span className="hidden sm:inline">Download</span>
                     </button>
                     <button
                       onClick={() => setShowViewerModal(false)}
@@ -348,7 +351,7 @@ export default function Resources() {
                 <div className="flex-1 overflow-hidden">
                   {selectedResource.category === 'pdf' ? (
                     <iframe
-                      src={`http://localhost:5000/api/resources/${selectedResource.id}/view`}
+                      src={`${axios.defaults.baseURL || window.location.origin}/api/resources/${selectedResource.id}/view`}
                       className="w-full h-full"
                       title={selectedResource.title}
                     />

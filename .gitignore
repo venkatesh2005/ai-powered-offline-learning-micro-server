@@ -69,7 +69,15 @@ pip-delete-this-directory.txt
 
 # AI Models (large files) - Download separately, not included in repo
 backend/models/*.gguf
+backend/models/.locks/
+backend/models/models--*/
 !backend/models/.gitkeep
+!backend/models/README.md
+
+# Debug indexing logs
+backend/debug_indexing_*.txt
+debug_chunks_analysis.txt
+debug_chunks.py
 
 # Embeddings cache
 backend/embeddings_cache/*.bin
